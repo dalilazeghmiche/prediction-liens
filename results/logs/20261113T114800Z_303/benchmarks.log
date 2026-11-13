@@ -1,0 +1,50 @@
+Chargement hep-th (1994-1996, coeur 3+3)...
+Graphe entier : 4,112 sommets ; coeur : 1,022
+Tailles : [500, 1000, 2000, 4112] | répétitions par méthode et taille : 3
+
+Graphe n=500 ; m=74 ; coeur=127 ; candidats=7986
+  Vérification naïf vs optimisé (scores exacts)...
+  CN_naif (3 répétitions)... médiane 0.0033 s ; +RSS≈0.1 Mio
+  CN (3 répétitions)... médiane 0.0001 s ; +RSS≈0.1 Mio
+  AA_naif (3 répétitions)... médiane 0.0030 s ; +RSS≈0.1 Mio
+  AA (3 répétitions)... médiane 0.0002 s ; +RSS≈0.1 Mio
+  RWR_symetrise (3 répétitions)... médiane 0.0333 s ; +RSS≈2.0 Mio
+
+Graphe n=1000 ; m=338 ; coeur=248 ; candidats=30528
+  Vérification naïf vs optimisé (scores exacts)...
+  CN_naif (3 répétitions)... médiane 0.0065 s ; +RSS≈0.1 Mio
+  CN (3 répétitions)... médiane 0.0004 s ; +RSS≈0.1 Mio
+  AA_naif (3 répétitions)... médiane 0.0068 s ; +RSS≈0.1 Mio
+  AA (3 répétitions)... médiane 0.0004 s ; +RSS≈0.1 Mio
+  RWR_symetrise (3 répétitions)... médiane 0.4439 s ; +RSS≈4.8 Mio
+
+Graphe n=2000 ; m=1431 ; coeur=503 ; candidats=125856
+  Vérification naïf vs optimisé (scores exacts)...
+  CN_naif (3 répétitions)... médiane 0.0303 s ; +RSS≈0.2 Mio
+  CN (3 répétitions)... médiane 0.0019 s ; +RSS≈0.2 Mio
+  AA_naif (3 répétitions)... médiane 0.0321 s ; +RSS≈0.2 Mio
+  AA (3 répétitions)... médiane 0.0031 s ; +RSS≈0.2 Mio
+  RWR_symetrise (3 répétitions)... médiane 1.7657 s ; +RSS≈18.3 Mio
+
+Graphe n=4112 ; m=5996 ; coeur=1022 ; candidats=520093
+  Vérification naïf vs optimisé (scores exacts)...
+  CN_naif (3 répétitions)... médiane 0.1638 s ; +RSS≈1.5 Mio
+  CN (3 répétitions)... médiane 0.0127 s ; +RSS≈1.1 Mio
+  AA_naif (3 répétitions)... médiane 0.1733 s ; +RSS≈1.4 Mio
+  AA (3 répétitions)... médiane 0.0116 s ; +RSS≈1.4 Mio
+  RWR_symetrise (3 répétitions)... médiane 12.9074 s ; +RSS≈114.2 Mio
+
+=== Résumé : médianes du temps total (secondes) ===
+n              CN_naif              CN         AA_naif              AA   RWR_symetrise
+500             0.0033          0.0001          0.0030          0.0002          0.0333
+1000            0.0065          0.0004          0.0068          0.0004          0.4439
+2000            0.0303          0.0019          0.0321          0.0031          1.7657
+4112            0.1638          0.0127          0.1733          0.0116         12.9074
+
+Terminé. Fichiers produits dans : results\benchmarks_cn_aa_rwr_hepth
+ - memoire_supplementaire.png
+ - mesures_individuelles.csv
+ - protocole_benchmarks.md
+ - resume_benchmarks.csv
+ - temps_cn_aa_naif_optimise.png
+ - temps_total_echelle_log.png

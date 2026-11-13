@@ -1,0 +1,50 @@
+
+=== AUDIT DES ARCHIVES hep-th ===
+Fichiers .abs dans l'archive : 29,555
+Identifiants dans les dates SLAC : 29,555
+Articles sans date SLAC : 0
+Articles sans auteurs reconnus : 0
+
+=== ARTICLES PAR ANNEE (deux definitions de la date) ===
+ Annee |     SLAC |  Depot arXiv
+----------------------------------
+  1993 |    2,055 |        2,058
+  1994 |    2,397 |        2,377
+  1995 |    2,344 |        2,303
+  1996 |    2,617 |        2,606
+  1997 |    2,663 |        2,673
+  1998 |    2,767 |        2,758
+  1999 |    2,779 |        2,803
+1994-96 |    7,358 |        7,286
+Articles traversant la frontiere 1994-96 selon la date choisie : 144
+
+=== RESULTATS AVEC LE PROTOCOLE DU PROJET ===
+Apprentissage : 1994-1996 ; test : 1997-1999 ; seuils : 3 et 3
+
+Dates SLAC (code actuel) :
+  Publications d'apprentissage : 7,358
+  Auteurs d'apprentissage       : 4,112
+  Aretes distinctes non orientees : 5,996
+  Auteurs du coeur             : 1,022
+  Anciennes aretes dans le coeur : 1,638
+  Nouvelles aretes du test     : 1,164
+  Paires candidates            : 520,093
+
+Dates de depot arXiv (comparaison) :
+  Publications d'apprentissage : 7,286
+  Auteurs d'apprentissage       : 4,089
+  Aretes distinctes non orientees : 5,931
+  Auteurs du coeur             : 1,025
+  Anciennes aretes dans le coeur : 1,642
+  Nouvelles aretes du test     : 1,169
+  Paires candidates            : 523,158
+
+=== REFERENCE DE L'ARTICLE [2] (hep-th) ===
+Publications d'apprentissage : 9 498 ; auteurs : 5 241 ; coeur : 1 438 ;
+nouvelles collaborations dans le coeur : 1 576.
+ATTENTION : les auteurs comptent certaines collaborations comme
+paires ordonnees / interactions ; ne pas comparer directement
+leur colonne 'collaborations' aux aretes distinctes non orientees.
+
+BILAN : ce script diagnostique les ecarts. Il ne prouve pas
+que les fichiers utilises par l'article sont strictement identiques.

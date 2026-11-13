@@ -1,0 +1,17 @@
+mode=quick
+utc=2026-11-13T11:27:41Z
+python=.venv/Scripts/python.exe
+repeats=3 sizes=500,1000,2000,all seed=42 worker_timeout=120
+alpha=0.15 tol=1e-10 max_iter=1000 block_size=64
+git_commit=1353761464ea02fa6c5d36b4ef6079f883dbd845
+git_clean=no
+os=Windows-11-10.0.26200-SP0
+machine=AMD64
+processor=Intel64 Family 6 Model 140 Stepping 1, GenuineIntel
+numpy=2.5.4
+scipy=1.18.1
+matplotlib=3.11.2
+psutil=7.2.2
+.venv/Scripts/python.exe -m unittest discover -s tests -v 
+.venv/Scripts/python.exe verifier_protocole_partie1.py 
+.venv/Scripts/python.exe evaluation_cn_aa_hepth.py 

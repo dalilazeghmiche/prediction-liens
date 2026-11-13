@@ -1,0 +1,4 @@
+methode_1,methode_2,intersection_top_k,intersection_sur_k
+Original_u_vers_v,Original_v_vers_u,522,0.448454
+Original_u_vers_v,RWR_symetrise,835,0.717354
+Original_v_vers_u,RWR_symetrise,851,0.731100

@@ -1,0 +1,64 @@
+test_aa_scores_toutes_paires (test_aa.TestAdamicAdar.test_aa_scores_toutes_paires) ... ok
+test_comparaison_force_brute (test_aa.TestAdamicAdar.test_comparaison_force_brute) ... ok
+test_hub_compte_moins (test_aa.TestAdamicAdar.test_hub_compte_moins)
+Ce qui distingue AA de CN : un voisin commun très connecté ... ok
+test_memes_paires_que_cn (test_aa.TestAdamicAdar.test_memes_paires_que_cn)
+AA et CN considèrent exactement les mêmes paires candidates. ... ok
+test_restriction_aux_sommets_coeur (test_aa.TestAdamicAdar.test_restriction_aux_sommets_coeur) ... ok
+test_valeurs_a_la_main (test_aa.TestAdamicAdar.test_valeurs_a_la_main) ... ok
+test_classement (test_cn.TestCommonNeighbors.test_classement) ... ok
+test_cn_scores_toutes_paires (test_cn.TestCommonNeighbors.test_cn_scores_toutes_paires) ... ok
+test_comparaison_force_brute (test_cn.TestCommonNeighbors.test_comparaison_force_brute)
+Sur des graphes aléatoires, la version rapide doit donner ... ok
+test_restriction_aux_sommets_coeur (test_cn.TestCommonNeighbors.test_restriction_aux_sommets_coeur) ... ok
+test_valeurs_a_la_main (test_cn.TestCommonNeighbors.test_valeurs_a_la_main) ... ok
+test_articles (test_datasets.TestLoadHepth.test_articles) ... ok
+test_normalisation (test_datasets.TestNoms.test_normalisation) ... ok
+test_parse_abs_multiligne_et_affiliations (test_datasets.TestNoms.test_parse_abs_multiligne_et_affiliations) ... ok
+test_parse_abs_un_auteur (test_datasets.TestNoms.test_parse_abs_un_auteur) ... ok
+test_split_authors (test_datasets.TestNoms.test_split_authors) ... ok
+test_cn_sur_petit_jeu (test_evaluate.TestBoutEnBout.test_cn_sur_petit_jeu) ... ok
+test_k_max (test_evaluate.TestCourbe.test_k_max) ... ok
+test_paires_seules_acceptees (test_evaluate.TestCourbe.test_paires_seules_acceptees) ... ok
+test_sans_lien_a_predire (test_evaluate.TestCourbe.test_sans_lien_a_predire) ... ok
+test_valeurs_a_la_main (test_evaluate.TestCourbe.test_valeurs_a_la_main) ... ok
+test_classement_trop_court (test_evaluate.TestPrecisionAtN.test_classement_trop_court) ... ok
+test_hasard_et_facteur (test_evaluate.TestPrecisionAtN.test_hasard_et_facteur) ... ok
+test_k_egal_n (test_evaluate.TestPrecisionAtN.test_k_egal_n) ... ok
+test_doublons_et_boucles (test_graph_io.TestFromEdges.test_doublons_et_boucles) ... ok
+test_from_edges (test_graph_io.TestFromEdges.test_from_edges) ... ok
+test_sommets_isoles (test_graph_io.TestFromEdges.test_sommets_isoles) ... ok
+test_identifiant_non_convertible (test_graph_io.TestReadEdgeList.test_identifiant_non_convertible) ... ok
+test_lecture_simple (test_graph_io.TestReadEdgeList.test_lecture_simple) ... ok
+test_ligne_trop_courte_strict (test_graph_io.TestReadEdgeList.test_ligne_trop_courte_strict) ... ok
+test_ligne_trop_courte_tolerante (test_graph_io.TestReadEdgeList.test_ligne_trop_courte_tolerante) ... ok
+test_date_manquante (test_graph_io.TestReadTemporalEdges.test_date_manquante) ... ok
+test_dates_lues (test_graph_io.TestReadTemporalEdges.test_dates_lues) ... ok
+test_composantes_separees (test_rwr.TestRwrEfficace.test_composantes_separees) ... ok
+test_meme_resultat_que_la_reference (test_rwr.TestRwrEfficace.test_meme_resultat_que_la_reference) ... ok
+test_pas_de_paire_deja_reliee (test_rwr.TestRwrEfficace.test_pas_de_paire_deja_reliee) ... ok
+test_restriction_aux_sommets_coeur (test_rwr.TestRwrEfficace.test_restriction_aux_sommets_coeur) ... ok
+test_scores_symetrises (test_rwr.TestRwrEfficace.test_scores_symetrises) ... ok
+test_voit_plus_loin_que_cn (test_rwr.TestRwrEfficace.test_voit_plus_loin_que_cn)
+A et E n'ont aucun voisin commun (CN = 0), mais RWR leur donne ... ok
+test_cul_de_sac (test_rwr.TestRwrReference.test_cul_de_sac) ... ok
+test_deux_sommets_a_la_main (test_rwr.TestRwrReference.test_deux_sommets_a_la_main)
+Graphe A–B, \u03b1 = 0,5. Équations de l'état stationnaire : ... ok
+test_redemarrage_fort (test_rwr.TestRwrReference.test_redemarrage_fort)
+Plus \u03b1 est grand, plus le marcheur reste près de sa source. ... ok
+test_somme_egale_1 (test_rwr.TestRwrReference.test_somme_egale_1) ... ok
+test_triangle_plus_un (test_split.TestCountCandidates.test_triangle_plus_un) ... ok
+test_proportion_et_disjonction (test_split.TestRandomSplit.test_proportion_et_disjonction) ... ok
+test_reproductible (test_split.TestRandomSplit.test_reproductible) ... ok
+test_sommets_conserves (test_split.TestRandomSplit.test_sommets_conserves) ... ok
+test_aretes_datees (test_split.TestTemporalSplit.test_aretes_datees) ... ok
+test_auteur_repete_dans_un_article (test_split.TestTemporalSplit.test_auteur_repete_dans_un_article) ... ok
+test_graphe_apprentissage (test_split.TestTemporalSplit.test_graphe_apprentissage) ... ok
+test_nombre_de_candidats (test_split.TestTemporalSplit.test_nombre_de_candidats) ... ok
+test_seuils_1 (test_split.TestTemporalSplit.test_seuils_1) ... ok
+test_seuils_2_et_1 (test_split.TestTemporalSplit.test_seuils_2_et_1) ... ok
+
+----------------------------------------------------------------------
+Ran 53 tests in 0.315s
+
+OK

@@ -1,0 +1,20 @@
+Chargement des donnees hep-th...
+Auteurs du coeur : 1,022
+Nouvelles collaborations : 1,164 => k=1,164
+Paires candidates : 520,093
+Hasard attendu : 0.223806%
+RWR symetrise : alpha=0.15, tol=1e-10, max_iter=1000, block_size=64
+Calcul RWR complet (tous les auteurs du coeur)...
+
+===== RWR =====
+Paires avec score > 0 : 362,697
+Temps calcul + tri : 6.6505 s
+Bonnes predictions : 87/1164
+Precision@1164 : 7.4742%
+Rappel@1164 : 7.4742%
+Facteur vs hasard : x33.40
+Ex aequo au seuil : 1 paires pour 1 places
+Bonnes predictions attendues avec ex aequo aleatoires : 87.00
+CSV : results\evaluation_rwr_hepth\top_1164_rwr.csv
+Resume : results\evaluation_rwr_hepth\resume_rwr.csv
+Termine sans modification des algorithmes.

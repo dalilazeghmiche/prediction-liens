@@ -1,0 +1,31 @@
+Chargement hep-th et découpage temporel...
+Cœur : 1,022 auteurs | Candidats : 520,093 | Nouveaux liens : 1,164
+Précision au hasard attendue : 0.223806%
+
+Calcul CN...
+  scores > 0 : 5,423 | temps calcul + tri : 0.018 s
+  top-1164 déterministe : 82 bonnes prédictions
+  top-1164 ex æquo aléatoires (espérance) : 86.02 bonnes prédictions
+  précision et rappel attendus @ 1164 : 7.3897% / 7.3897%
+  positifs récupérables avec score > 0 : 262/1164
+
+Calcul AA...
+  scores > 0 : 5,423 | temps calcul + tri : 0.012 s
+  top-1164 déterministe : 91 bonnes prédictions
+  top-1164 ex æquo aléatoires (espérance) : 91.13 bonnes prédictions
+  précision et rappel attendus @ 1164 : 7.8288% / 7.8288%
+  positifs récupérables avec score > 0 : 262/1164
+
+Calcul RWR_symetrise...
+  scores > 0 : 362,697 | temps calcul + tri : 6.842 s
+  top-1164 déterministe : 87 bonnes prédictions
+  top-1164 ex æquo aléatoires (espérance) : 87.00 bonnes prédictions
+  précision et rappel attendus @ 1164 : 7.4742% / 7.4742%
+  positifs récupérables avec score > 0 : 1027/1164
+
+Fichiers générés :
+ - results\courbes_precision_rappel_hepth\courbes_precision_rappel.csv
+ - results\courbes_precision_rappel_hepth\synthese_precision_rappel.csv
+ - results\courbes_precision_rappel_hepth\courbe_precision_rappel_complete.png
+ - results\courbes_precision_rappel_hepth\courbe_precision_rappel_zoom.png
+ - results\courbes_precision_rappel_hepth\protocole_et_limites.txt

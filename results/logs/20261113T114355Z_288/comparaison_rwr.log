@@ -1,0 +1,31 @@
+Chargement des données hep-th...
+Cœur : 1,022 auteurs | Paires candidates : 520,093 | Nouvelles arêtes : 1,164
+Hasard : 0.223806 %
+Calcul de la matrice RWR une seule fois pour les trois variantes...
+RWR commun aux 3 variantes : 6.047 s
+
+Original_u_vers_v:
+  Top-1164 déterministe : 80 vraies collaborations (6.8729%)
+  Ex æquo aléatoires en espérance : 80.00 (6.8729%)
+  Facteur vs hasard (espérance) : ×30.71
+  Liens positifs à score > 0 : 1027/1164
+  Ex æquo au seuil : 1 pour 1 places
+
+Original_v_vers_u:
+  Top-1164 déterministe : 84 vraies collaborations (7.2165%)
+  Ex æquo aléatoires en espérance : 84.00 (7.2165%)
+  Facteur vs hasard (espérance) : ×32.24
+  Liens positifs à score > 0 : 1027/1164
+  Ex æquo au seuil : 1 pour 1 places
+
+RWR_symetrise:
+  Top-1164 déterministe : 87 vraies collaborations (7.4742%)
+  Ex æquo aléatoires en espérance : 87.00 (7.4742%)
+  Facteur vs hasard (espérance) : ×33.40
+  Liens positifs à score > 0 : 1027/1164
+  Ex æquo au seuil : 1 pour 1 places
+Chevauchement Top-1164 Original_u_vers_v / Original_v_vers_u : 522/1164
+Chevauchement Top-1164 Original_u_vers_v / RWR_symetrise : 835/1164
+Chevauchement Top-1164 Original_v_vers_u / RWR_symetrise : 851/1164
+
+Terminé. Résultats : results\comparaison_rwr_original_symetrise_hepth

@@ -1,0 +1,29 @@
+Chargement des donnees hep-th...
+Auteurs coeur : 1,022
+Paires candidates : 520,093
+Nouvelles collaborations : 1,164 => k=1,164
+Precision aleatoire attendue : 0.223806%
+
+===== CN =====
+Paires avec score > 0 : 5,423
+Temps calcul + tri : 0.0085 s
+Bonnes predictions : 82/1164
+Precision@1164 : 7.0447%
+Rappel@1164 : 7.0447%
+Facteur vs hasard : x31.48
+Ex aequo au seuil : 4,574 paires pour 315 places
+Bonnes predictions attendues avec ex aequo aleatoires : 86.02
+CSV : results\evaluation_cn_aa_hepth\top_1164_cn.csv
+
+===== AA =====
+Paires avec score > 0 : 5,423
+Temps calcul + tri : 0.0119 s
+Bonnes predictions : 91/1164
+Precision@1164 : 7.8179%
+Rappel@1164 : 7.8179%
+Facteur vs hasard : x34.93
+Ex aequo au seuil : 149 paires pour 56 places
+Bonnes predictions attendues avec ex aequo aleatoires : 91.13
+CSV : results\evaluation_cn_aa_hepth\top_1164_aa.csv
+
+Termine. Fichiers disponibles dans results/evaluation_cn_aa_hepth/.
