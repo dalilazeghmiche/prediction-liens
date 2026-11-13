@@ -1,0 +1,30 @@
+{
+  "source": "data\\raw\\HI-II-14.tsv",
+  "nb_sommets": 4182,
+  "nb_aretes_apres_nettoyage": 13115,
+  "graines": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "fraction_test": 0.5,
+  "methodes": [
+    "CN",
+    "AA",
+    "L3_optimise"
+  ],
+  "k": "nombre d'aretes masquees pour la graine",
+  "tie_policy": "departage uniforme aleatoire en esperance, y compris score 0",
+  "sommets": "tous conserves, y compris isoles",
+  "fichiers_seed_42": "aucun ecrasement : tous les decoupages sont en memoire",
+  "precision": "vrais liens attendus au Top-k / k",
+  "ecart_type": "ecart-type empirique echantillon (ddof=1)",
+  "limites": [
+    "5 graines ne constituent pas une validation exhaustive",
+    "une seule source biologique",
+    "les liens absents peuvent etre des interactions inconnues",
+    "le masquage peut isoler certaines proteines"
+  ]
+}

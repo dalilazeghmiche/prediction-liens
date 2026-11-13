@@ -1,0 +1,13 @@
+{
+  "source": "HI-II-14",
+  "n": 4182,
+  "train": 6557,
+  "test": 6558,
+  "candidats": 8735914,
+  "baseline_precision": 0.0007506942032625321,
+  "definition": "L2/L3/L4 bruts = (A^ell)[x,y], marches avec retours en arriere",
+  "autre": "L3_normalise = somme des chemins de longueur 3 pondérés 1/sqrt(dU*dV)",
+  "split": "Même train/test pour toutes les mesures; sous-échantillonnage induit si max-nodes!=all",
+  "ties": "Départage aléatoire uniforme en espérance y compris score nul",
+  "limites": "Une seule graine; présence de protéines isolées; aucune preuve biologique directe"
+}

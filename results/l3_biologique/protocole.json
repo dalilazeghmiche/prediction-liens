@@ -1,0 +1,24 @@
+{
+  "source": "HI-II-14 — https://interactome-atlas.org/download",
+  "fichier_source": "data/raw/HI-II-14.tsv",
+  "sha256_source": "a8ac784ee9ea1ddb767189a9de9345bf778990f7ef29cc7bccb1ce39688a6415",
+  "graphe": "simple, non orienté, non pondéré",
+  "seed": 42,
+  "fraction_test_demandee": 0.5,
+  "nettoyage": {
+    "lignes_donnees": 13633,
+    "boucles_ignorees": 518,
+    "doublons_ignores": 0,
+    "sommets": 4182,
+    "aretes_uniques": 13115,
+    "entete_ignoree": false
+  },
+  "sommets_total": 4182,
+  "sommets_isoles_apres_nettoyage": 72,
+  "aretes_train": 6557,
+  "aretes_test": 6558,
+  "paires_candidates": 8735914,
+  "precision_hasard": 0.0007506942032625321,
+  "sommets_isoles_dans_train": 1140,
+  "note": "Masquage aléatoire des arêtes, pas de datation ni de preuve expérimentale de liens absents."
+}

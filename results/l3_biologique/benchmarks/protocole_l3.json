@@ -1,0 +1,17 @@
+{
+  "base": "results\\l3_biologique",
+  "seed": 42,
+  "sizes": [
+    500,
+    1000,
+    2000,
+    4182
+  ],
+  "naive_max": 2000,
+  "repetitions": 3,
+  "mesure": "temps du calcul de scores seul, sans tri ni préparation des données",
+  "sous_graphes": "induits et emboîtés, sélection pseudo-aléatoire de sommets",
+  "validation": "égalité des scores sur 80 graphes aléatoires et tailles n <= naive_max",
+  "memoire": "delta du pic RSS échantillonné toutes les 5 ms (sous-estimation possible)",
+  "interpretation": "la densité change avec n ; étude empirique, pas preuve de complexité asymptotique"
+}

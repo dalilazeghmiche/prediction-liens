@@ -1,0 +1,14 @@
+{
+  "fraction_test": 0.5000381242851697,
+  "sommets": 4182,
+  "train": 6557,
+  "test": 6558,
+  "candidats": 8735914,
+  "hasard_precision": 0.0007506942032625321,
+  "sommets_isoles_train": 1140,
+  "liens_test_avec_au_moins_un_isole": 1358,
+  "k_principal": 6558,
+  "k_max_courbes": 20000,
+  "tie_policy": "uniforme aléatoire en espérance, y compris score 0",
+  "note": "L'absence d'interaction dans la base n'est pas une preuve de non-interaction biologique."
+}
