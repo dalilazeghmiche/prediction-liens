@@ -1,0 +1,4 @@
+algorithme,candidats,nouveaux_liens,k_reference,scores_positifs,liens_reels_score_positif,tp_topk_deterministe,tp_topk_exaequo_moyen,precision_topk_deterministe,precision_topk_moyenne,rappel_topk_moyen,exaequo_groupe_seuil,exaequo_places,secondes_calcul_tri_analyse
+CN,520093,1164,1164,5423,262,82,86.01595977,0.070446735395,0.073896872657,0.073896872657,4574,315,0.008649
+AA,520093,1164,1164,5423,262,91,91.12751678,0.078178694158,0.078288244655,0.078288244655,149,56,0.014112
+RWR_symetrise,520093,1164,1164,362697,1027,87,87.00000000,0.074742268041,0.074742268041,0.074742268041,2,2,11.136755

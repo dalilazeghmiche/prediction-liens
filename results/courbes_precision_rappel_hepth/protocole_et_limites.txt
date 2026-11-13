@@ -1,0 +1,20 @@
+PROTOCOLE
+- Corpus : hep-th KDD Cup, lecture du ZIP du projet, années SLAC.
+- Apprentissage : 1994-1996 ; test : 1997-1999.
+- Cœur : auteurs avec au moins 3 articles dans chaque période.
+- Candidats : 520,093 ; arêtes nouvelles : 1,164.
+- RWR : score symétrisé r_u(v)+r_v(u) (adaptation de l'article [2]).
+- Scores > 0 : classés selon le score décroissant.
+- Paires non renvoyées : traitées comme groupe ex aequo de score zéro.
+- Pour chaque k : moyenne analytique de TP sur les départages aléatoires
+  à score identique ; pas de simulation.
+- La précision et le rappel attendus sont tracés en fonction de k.
+- Le zoom ne montre que rappel <= 25 % et précision <= 30 %.
+- Les points de la courbe sont échantillonnés en k ; le CSV contient
+  les valeurs exactes attendues aux k enregistrés.
+- Les résultats dépendent du corpus et du paramétrage RWR.
+- Le corpus du projet diffère du corpus original de l'article ;
+  la reproduction n'est pas numériquement identique.
+- Précision/rappel de cette expérience : mesurés hors des données
+  utilisées pour calculer les scores (hormis le critère historique
+  d'activité du cœur sur les deux périodes).
