@@ -1,11 +1,4 @@
-"""Robustesse des predictions biologiques CN, AA et L3 sur plusieurs masquages.
-
-Depuis la racine du projet prediction-liens :
-    python robustesse_l3_bio.py --seeds 42,43,44,45,46
-
-Les sorties sont dans results/l3_biologique/robustesse/. Les fichiers de
-l'experience principale (seed=42) ne sont jamais ecrases.
-"""
+"""Teste la robustesse de CN, AA, L3 sur plusieurs graines de masquage."""
 from __future__ import annotations
 
 import argparse
@@ -17,6 +10,7 @@ import statistics
 import time
 from collections import defaultdict
 from pathlib import Path
+from utils_experiences import title, result, done
 
 from preparer_donnees_l3 import lire_hi_ii_14
 from evaluer_l3_bio import courbe_attendue
@@ -150,9 +144,7 @@ def executer(source: Path, out: Path, seeds: list[int], fraction: float,
     graphe, info = lire_hi_ii_14(source)
     n = len(graphe)
     m = info["aretes_uniques"]
-    print(f"Source : {source} | {n:,} proteines | {m:,} interactions", flush=True)
-    print(f"Graines : {seeds} ; fraction de test : {fraction:.2f}", flush=True)
-    print("Aucune modification des fichiers train/test de la graine 42.\n", flush=True)
+    title("HI-II-14 | Robustesse", info=f"{n:,} protéines | {len(seeds)} graines")
 
     out.mkdir(parents=True, exist_ok=True)
     lignes = []
@@ -171,8 +163,7 @@ def executer(source: Path, out: Path, seeds: list[int], fraction: float,
         hasard = 100 * k / candidats
         isoles = {u for u in train if not train[u]}
         liens_isoles = sum(u in isoles or v in isoles for u, v in test)
-        print(f"[seed={seed}] train={m-k:,}, test={k:,}, isoles={len(isoles):,}, "
-              f"test impliquant un isole={liens_isoles:,}", flush=True)
+        recap = []
         par_seed.append({"seed": seed, "n": n, "train": m - k,
                          "test": k, "candidats": candidats,
                          "hasard_precision_pourcent": hasard,
@@ -202,14 +193,11 @@ def executer(source: Path, out: Path, seeds: list[int], fraction: float,
                 "temps_scores_s": duree,
             }
             lignes.append(row)
-            print(f"  {methode:12s} P@{k}={row['precision_k_pourcent']:6.3f}%  "
-                  f"vrais={row['vrais_top_k_esperance']:8.2f}  "
-                  f"score>0 sur {nb_hits_positifs:,} liens  "
-                  f"temps={duree:.3f}s", flush=True)
+            recap.append(f"{methode}={row['precision_k_pourcent']:.2f}%")
             del scores, courbe
             gc.collect()
         del train, split
-        print(flush=True)
+        print(f"  seed {seed}: " + " | ".join(recap), flush=True)
 
     resume = resume_par_methode(lignes)
     deltas = deltas_apparies(lignes)
@@ -234,17 +222,10 @@ def executer(source: Path, out: Path, seeds: list[int], fraction: float,
                      "les liens absents peuvent etre des interactions inconnues",
                      "le masquage peut isoler certaines proteines"],
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print("=== Resume : precision moyenne +/- ecart-type (points de %) ===", flush=True)
+    print("  Moyenne ± écart-type (points de %) :")
     for r in resume:
-        print(f"{r['methode']:12s} : {r['precision_moyenne_pct']:.4f}% "
-              f"+/- {r['precision_ecart_type_pct']:.4f} "
-              f"[min={r['precision_min_pct']:.4f}%, max={r['precision_max_pct']:.4f}%]", flush=True)
-    for autre in ("AA", "CN"):
-        gain = [x["gain_points_precision"] for x in deltas
-                if x["comparaison"] == f"L3_optimise - {autre}"]
-        print(f"Gain L3 sur {autre} : {statistics.mean(gain):+.4f} points "
-              f"({sum(v > 0 for v in gain)}/{len(gain)} graines en faveur de L3)", flush=True)
-    print(f"\n[OK] Resultats : {out}", flush=True)
+        print(f"    {r['methode']:<12} {r['precision_moyenne_pct']:.2f}% ± {r['precision_ecart_type_pct']:.2f}")
+    done(out)
     return lignes, resume
 
 

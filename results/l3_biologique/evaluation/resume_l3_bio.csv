@@ -1,4 +1,4 @@
-﻿methode,nb_scores_positifs,liens_test_score_positif,temps_calcul_s,vrais_top_k_deterministe,vrais_top_k_esperance,precision_k_pourcent,rappel_k_pourcent,facteur_vs_hasard
-CN,113897,1256,0.051608,282,304.920650,4.649598,4.649598,61.9373
-AA,113897,1256,0.074437,341,341.000000,5.199756,5.199756,69.2660
-L3_optimise,597760,4001,1.873098,1283,1283.000000,19.563891,19.563891,260.6107
+methode,nb_scores_positifs,liens_test_score_positif,temps_calcul_s,vrais_top_k_deterministe,vrais_top_k_esperance,precision_k_pourcent,rappel_k_pourcent,facteur_vs_hasard
+CN,113897,1256,0.171594,282,304.920650,4.649598,4.649598,61.9373
+AA,113897,1256,0.267934,341,341.000000,5.199756,5.199756,69.2660
+L3_optimise,597760,4001,3.242820,1283,1283.000000,19.563891,19.563891,260.6107

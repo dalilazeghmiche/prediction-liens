@@ -1,15 +1,12 @@
-"""Audit des donnees hep-th du projet AAGA (article [2]).
-
-"""
+"""Compare les dates et statistiques hep-th avec l’article original."""
 from collections import Counter
 from pathlib import Path
 import tarfile
 
 from src.datasets import _read_slacdates, parse_abs
+from utils_experiences import RAW, title
 from src.split import temporal_split
 
-ROOT = Path(__file__).resolve().parent
-RAW = ROOT / "data" / "raw"
 ABS = RAW / "hep-th-abs.tar.gz"
 DATES = RAW / "hep-th-slacdates.tar.gz"
 
@@ -52,22 +49,9 @@ def main():
                 if (1994 <= year_slac <= 1996) != (1994 <= year_submission <= 1996):
                     cross_period += 1
 
-    print("\n=== AUDIT DES ARCHIVES hep-th ===")
-    print(f"Fichiers .abs dans l'archive : {n_abs:,}")
-    print(f"Identifiants dans les dates SLAC : {len(date_index):,}")
-    print(f"Articles sans date SLAC : {missing_dates:,}")
-    print(f"Articles sans auteurs reconnus : {missing_authors:,}")
-
-    print("\n=== ARTICLES PAR ANNEE (deux definitions de la date) ===")
-    print(f"{'Annee':>6} | {'SLAC':>8} | {'Depot arXiv':>12}")
-    print("-" * 34)
-    for year in range(1993, 2000):
-        print(f"{year:>6} | {count_slac[year]:>8,} | {count_submission[year]:>12,}")
-    print(f"{'1994-96':>6} | {sum(count_slac[y] for y in range(1994,1997)):>8,} | {sum(count_submission[y] for y in range(1994,1997)):>12,}")
-    print(f"Articles traversant la frontiere 1994-96 selon la date choisie : {cross_period:,}")
-
-    print("\n=== RESULTATS AVEC LE PROTOCOLE DU PROJET ===")
-    print("Apprentissage : 1994-1996 ; test : 1997-1999 ; seuils : 3 et 3")
+    title("hep-th | Audit du corpus")
+    print(f"  {n_abs:,} articles .abs | {missing_dates:,} dates SLAC manquantes | {missing_authors:,} sans auteurs")
+    print(f"  {cross_period:,} articles changent de période selon la définition de la date")
     for label, papers in (("Dates SLAC (code actuel)", papers_slac),
                           ("Dates de depot arXiv (comparaison)", papers_submission)):
         s = temporal_split(papers, train=(1994, 1996), test=(1997, 1999),
@@ -75,23 +59,11 @@ def main():
         train_papers = sum(1 for year, _ in papers if 1994 <= year <= 1996)
         train_edges = sum(len(neigh) for neigh in s.train_adj.values()) // 2
         old_core_edges = sum(1 for u in s.core for v in s.train_adj[u] if v in s.core) // 2
-        print(f"\n{label} :")
-        print(f"  Publications d'apprentissage : {train_papers:,}")
-        print(f"  Auteurs d'apprentissage       : {len(s.train_adj):,}")
-        print(f"  Aretes distinctes non orientees : {train_edges:,}")
-        print(f"  Auteurs du coeur             : {len(s.core):,}")
-        print(f"  Anciennes aretes dans le coeur : {old_core_edges:,}")
-        print(f"  Nouvelles aretes du test     : {len(s.new_edges):,}")
-        print(f"  Paires candidates            : {s.num_candidates:,}")
+        print(f"  {label}: {train_papers:,} articles train | {len(s.train_adj):,} auteurs | "
+              f"{train_edges:,} arêtes | cœur={len(s.core):,} | test={len(s.new_edges):,}")
 
-    print("\n=== REFERENCE DE L'ARTICLE [2] (hep-th) ===")
-    print("Publications d'apprentissage : 9 498 ; auteurs : 5 241 ; coeur : 1 438 ;")
-    print("nouvelles collaborations dans le coeur : 1 576.")
-    print("ATTENTION : les auteurs comptent certaines collaborations comme")
-    print("paires ordonnees / interactions ; ne pas comparer directement")
-    print("leur colonne 'collaborations' aux aretes distinctes non orientees.")
-    print("\nBILAN : ce script diagnostique les ecarts. Il ne prouve pas")
-    print("que les fichiers utilises par l'article sont strictement identiques.")
+    print("  Référence article : 9 498 articles train | 5 241 auteurs | cœur=1 438 | test=1 576")
+    print("  [INFO] Corpus différent ; scores à comparer uniquement à protocole égal")
 
 
 if __name__ == "__main__":

@@ -1,10 +1,9 @@
-"""Verification de coherence des sorties experimentales de la partie sociale.
-
-"""
+"""Vérifie la cohérence des CSV et graphiques de la partie sociale."""
 from __future__ import annotations
 import csv
 import math
 from pathlib import Path
+from utils_experiences import title
 
 ROOT = Path(__file__).resolve().parent
 RESULTS = ROOT / 'results'
@@ -90,13 +89,9 @@ def main():
         if n_hits != int(algos[label]['tp_topk_deterministe']):
             raise AssertionError(f'Bons liens differents : {label} ({n_hits})')
 
-    print('Validation OK :')
-    print(f'  Meme protocole : {n:,} candidats, {k:,} nouveaux liens')
-    for name in ('CN','AA','RWR_symetrise'):
-        rr=algos[name]
-        print(f"  {name}: TP={rr['tp_topk_deterministe']}, precision={float(rr['precision_topk_deterministe']):.4%}")
-    print(f'  Benchmarks : {len(sizes)} tailles, {len(names)} methodes')
-    print('  CSV, figures et comparaison RWR : coherents')
+    title("hep-th | Vérification des sorties")
+    print(f"  {n:,} candidats | {k:,} vrais liens | {len(sizes)} tailles de benchmark")
+    print("  [OK] CSV et graphiques cohérents")
 
 
 if __name__=='__main__':

@@ -1,25 +1,4 @@
-"""Benchmarks reproductibles de CN, Adamic-Adar et RWR sur hep-th.
-
-Installation :
-    .\\.venv\\Scripts\\python.exe -m pip install matplotlib psutil
-
-Exécution Windows :
-    .\\.venv\\Scripts\\python.exe benchmarks_cn_aa_rwr_hepth.py
-
-Exécution plus approfondie :
-    .\\.venv\\Scripts\\python.exe benchmarks_cn_aa_rwr_hepth.py --repeats 5 \
-        --sizes 500,1000,2000,all
-
-Méthode :
-  - construire le graphe d'apprentissage 1994-1996 / coeur 3+3 ;
-  - choisir des sous-graphes induits emboités (échantillonnage fixe seed) ;
-  - restreindre le coeur aux sommets présents dans chaque sous-graphe ;
-  - comparer les mêmes graphes/candidats pour tous les algorithmes ;
-  - comparer CN/AA optimisés du dépôt à deux références naïves du script ;
-  - exécuter chaque méthode et taille dans un processus isolé (BLAS 1 thread) ;
-  - mesurer calcul des scores, classement et mémoire RSS (échantillonnée).
-
-"""
+"""Benchmarks CN/AA naïfs et optimisés, RWR : temps et mémoire RSS."""
 
 from __future__ import annotations
 
@@ -31,6 +10,7 @@ import math
 import os
 import pickle
 from pathlib import Path
+from utils_experiences import title, result, done, social_split
 import random
 import statistics
 import subprocess
@@ -254,18 +234,14 @@ def main(args):
     d = ROOT / "data" / "raw" / "hep-th-slacdates.tar.gz"
     if not (a.exists() and d.exists()):
         raise FileNotFoundError("Archives hep-th introuvables dans data/raw/")
-    print("Chargement hep-th (1994-1996, coeur 3+3)...", flush=True)
-    split = temporal_split(load_hepth(str(a), str(d)),
-                           train=(1994, 1996), test=(1997, 1999),
-                           k_train=3, k_test=3)
+    split = social_split()
     adj_full = split.train_adj
     all_nodes = sorted(adj_full)
     rng = random.Random(args.seed)
     rng.shuffle(all_nodes)
     sizes = parse_sizes(args.sizes, len(all_nodes))
     OUT.mkdir(parents=True, exist_ok=True)
-    print(f"Graphe entier : {len(adj_full):,} sommets ; coeur : {len(split.core):,}")
-    print(f"Tailles : {sizes} | répétitions par méthode et taille : {args.repeats}", flush=True)
+    title("hep-th | Benchmarks", info=f"n={sizes} | repeats={args.repeats}")
 
     details = []
     detail_cols = ["sommets_graphe", "aretes_graphe", "sommets_coeur",
@@ -285,12 +261,9 @@ def main(args):
             with payload_file.open("wb") as f:
                 pickle.dump({"adj": adj, "core": core}, f,
                             protocol=pickle.HIGHEST_PROTOCOL)
-            print(f"\nGraphe n={n} ; m={edges} ; coeur={len(core)} ; candidats={candidates}", flush=True)
-            print("  Vérification naïf vs optimisé (scores exacts)...", flush=True)
             verify_local_algorithms(adj, core)
             counts = {}
             for algo in ALGORITHMS:
-                print(f"  {algo} ({args.repeats} répétitions)...", end="", flush=True)
                 r = measure_process(algo, payload_file, args)
                 ncounts = {t["scores"] for t in r["trials"]}
                 if len(ncounts) != 1:
@@ -311,8 +284,8 @@ def main(args):
                     })
                 median_run = statistics.median(
                     t["score_seconds"] + t["sort_seconds"] for t in r["trials"])
-                print(f" médiane {median_run:.4f} s ; "
-                      f"+RSS≈{r['rss_extra_peak_mb']:.1f} Mio", flush=True)
+                result(f"n={n} {algo}", f"{median_run:.4f} s",
+                       detail=f"RSS +{r['rss_extra_peak_mb']:.1f} Mio")
                 # Sauvegarde immédiate en cas d'interruption d'un benchmark long.
                 write_csv(OUT / "mesures_individuelles.csv", details, detail_cols)
             if counts["CN"] != counts["CN_naif"]:
@@ -378,15 +351,7 @@ def main(args):
 - Le corpus de ce dépôt diffère du corpus exact de l'article [2].
 """
     (OUT / "protocole_benchmarks.md").write_text(txt, encoding="utf-8")
-    print("\n=== Résumé : médianes du temps total (secondes) ===")
-    print("n      " + " ".join(f"{name:>15}" for name in ALGORITHMS))
-    for n in sizes:
-        vals = [next(r for r in summary if r["sommets_graphe"] == n and
-                     r["algorithme"] == algo)["mediane_total_s"] for algo in ALGORITHMS]
-        print(f"{n:<7}" + " ".join(f"{val:15.4f}" for val in vals))
-    print(f"\nTerminé. Fichiers produits dans : {OUT.relative_to(ROOT)}")
-    for f in sorted(OUT.iterdir()):
-        print(f" - {f.name}")
+    done(OUT)
 
 
 if __name__ == "__main__":

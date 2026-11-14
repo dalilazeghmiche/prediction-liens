@@ -1,27 +1,16 @@
-"""Compare rooted PageRank directionnel et RWR symétrisé sur hep-th.
-
-Depuis la racine du dépôt (Windows PowerShell) :
-    .\\.venv\\Scripts\\python.exe comparaison_rwr_original_symetrise_hepth.py
-
-Dépendances : numpy, scipy, matplotlib (déjà utilisés dans le projet).
-
-"""
+"""Compare RWR directionnel (deux sens) et symétrisé sur hep-th."""
 from __future__ import annotations
 
 import argparse
 import csv
 import time
-from pathlib import Path
+from utils_experiences import RESULTS, social_split, title, result, done, rwr_options, check_rwr
 
 import numpy as np
 
-from src.datasets import load_hepth
 from src.measures.global_measures import rwr_matrix
-from src.split import temporal_split
 
-ROOT = Path(__file__).resolve().parent
-DATA = ROOT / "data" / "raw"
-OUTPUT = ROOT / "results" / "comparaison_rwr_original_symetrise_hepth"
+OUTPUT = RESULTS / "comparaison_rwr_original_symetrise_hepth"
 
 
 def expected_top_k(sorted_scores, ordered_true, k):
@@ -46,33 +35,22 @@ def write_csv(path, header, rows):
 
 def main():
     parser = argparse.ArgumentParser(description="Comparaison du RWR directionnel / symétrisé sur hep-th")
-    parser.add_argument("--alpha", type=float, default=0.15)
-    parser.add_argument("--tol", type=float, default=1e-10)
-    parser.add_argument("--max-iter", type=int, default=1000)
-    parser.add_argument("--block-size", type=int, default=64)
-    parser.add_argument("--max-k", type=int, default=5000,
-                        help="Maximum de prédictions représentées dans les courbes (défaut 5000)")
+    rwr_options(parser)
+    parser.add_argument("--max-k", type=int, default=5000)
     args = parser.parse_args()
-    if not 0 < args.alpha < 1 or args.tol <= 0 or args.max_iter <= 0 or args.block_size <= 0:
-        parser.error("alpha dans ]0,1[, tol > 0, max-iter et block-size > 0")
+    check_rwr(parser, args)
 
-    print("Chargement des données hep-th...", flush=True)
-    papers = load_hepth(DATA / "hep-th-abs.tar.gz", DATA / "hep-th-slacdates.tar.gz")
-    split = temporal_split(papers, train=(1994, 1996), test=(1997, 1999),
-                           k_train=3, k_test=3)
+    split = social_split()
     core = sorted(split.core)
     n = len(core)
     k = len(split.new_edges)
     baseline = k / split.num_candidates
-    print(f"Cœur : {n:,} auteurs | Paires candidates : {split.num_candidates:,} | Nouvelles arêtes : {k:,}")
-    print(f"Hasard : {100 * baseline:.6f} %")
-    print("Calcul de la matrice RWR une seule fois pour les trois variantes...", flush=True)
+    title("hep-th | Variantes RWR", info=f"{n:,} auteurs | {k:,} liens")
     begin = time.perf_counter()
     R, nodes, index = rwr_matrix(split.train_adj, core,
                                  alpha=args.alpha, tol=args.tol,
                                  max_iter=args.max_iter, block_size=args.block_size)
     compute_time = time.perf_counter() - begin
-    print(f"RWR commun aux 3 variantes : {compute_time:.3f} s", flush=True)
 
     # Paires canoniques (u < v), ordonnées alphabétiquement.
     core_rows = np.array([index[u] for u in core], dtype=np.int64)
@@ -122,13 +100,8 @@ def main():
                int(np.count_nonzero(positive_mask)), recoverable,
                ties, places, compute_time, rank_time]
         summary.append(row)
-        print(f"\n{name}:")
-        print(f"  Top-{k} déterministe : {observed_hits} vraies collaborations ({observed_hits / k:.4%})")
-        print(f"  Ex æquo aléatoires en espérance : {expected_hits:.2f} ({expected_hits / k:.4%})")
-        print(f"  Facteur vs hasard (espérance) : ×{(expected_hits/k)/baseline:.2f}")
-        print(f"  Liens positifs à score > 0 : {recoverable}/{k}")
-        print(f"  Ex æquo au seuil : {ties} pour {places} places")
-
+        result(name, f"P@{k} = {expected_hits / k:.2%}",
+               f"{observed_hits} liens (tri fixe)", seconds=compute_time)
         for position, ind in enumerate(order[:k], start=1):
             top_rows.append((name, position, core[ii[ind]], core[jj[ind]],
                              f"{scores[ind]:.17g}", int(y[ind])))
@@ -150,7 +123,6 @@ def main():
             a, b = names[a_index], names[b_index]
             intersect = len(set(rank_index[a]) & set(rank_index[b]))
             overlaps.append((a, b, intersect, f"{intersect/k:.6f}"))
-            print(f"Chevauchement Top-{k} {a} / {b} : {intersect}/{k}")
 
     write_csv(OUTPUT / "resume_comparaison_rwr.csv",
               ["methode", "tp_deterministe", "precision_deterministe",
@@ -211,8 +183,7 @@ def main():
     except ImportError:
         print("Matplotlib non installé : graphiques non générés (CSV disponibles).")
 
-    print(f"\nTerminé. Résultats : {OUTPUT.relative_to(ROOT)}")
-
+    done(OUTPUT)
 
 
 if __name__ == "__main__":

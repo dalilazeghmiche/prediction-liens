@@ -1,25 +1,14 @@
-"""Évalue CN, AA et L3 sur le même train/test HI-II-14.
-
-Usage (racine du dépôt):
-    python evaluer_l3_bio.py --data results/l3_biologique --output results/l3_biologique/evaluation
-
-Requis : src.measures.l3.l3_optimise, src.measures.local.cn_scores/aa_scores
-
-Les paires à score nul sont prises en compte analytiquement (ex æquo uniformes
-en espérance). On n'énumère jamais les ~8,7 millions de candidats.
-"""
+"""Évaluation CN / AA / L3 avec ex æquo uniformes, y compris scores nuls."""
 from __future__ import annotations
 
 import argparse
-import csv
 import json
-import math
 import time
-from collections import defaultdict
 from heapq import nsmallest
 from pathlib import Path
 
 from src.graph_io import from_edges
+from utils_experiences import courbe_attendue, save_csv, title, result, done
 from src.measures.local import aa_scores, cn_scores
 from src.measures.l3 import l3_optimise
 
@@ -43,50 +32,6 @@ def lire_aretes(path: Path) -> set[tuple[str, str]]:
     return pairs
 
 
-def courbe_attendue(scores, vrais_liens, total_candidats, max_k):
-    """Courbe de précision/rappel en espérance avec tirage uniforme des ex æquo.
-
-    Une paire de score absent est de score zéro. O(P+G log G+max_k)
-    plutôt que O(nombre_total_de_candidats).
-    """
-    if max_k <= 0 or total_candidats <= 0 or not vrais_liens:
-        raise ValueError("Effectifs invalides")
-    if len(scores) > total_candidats:
-        raise ValueError("Davantage de scores que de candidats")
-
-    groupes = defaultdict(lambda: [0, 0])
-    hits_positifs = 0
-    for pair, score in scores.items():
-        if not math.isfinite(score) or score <= 0:
-            raise ValueError(f"Score non positif ou non fini : {pair}: {score}")
-        hit = pair in vrais_liens
-        groupes[score][0] += 1
-        groupes[score][1] += int(hit)
-        hits_positifs += hit
-
-    nb_zero = total_candidats - len(scores)
-    hits_zero = len(vrais_liens) - hits_positifs
-    if not 0 <= hits_zero <= nb_zero:
-        raise ValueError("Incohérence dans les liens de test et les scores")
-    if nb_zero:
-        groupes[0.0] = [nb_zero, hits_zero]
-
-    k_cap = min(max_k, total_candidats)
-    rows = []
-    k = 0
-    hits_cumules = 0.0
-    for score in sorted(groupes, reverse=True):
-        nombre, bons = groupes[score]
-        for j in range(1, min(nombre, k_cap - k) + 1):
-            kk = k + j
-            hits_moyens = hits_cumules + j * bons / nombre
-            rows.append((kk, hits_moyens / kk, hits_moyens / len(vrais_liens)))
-        k += nombre
-        hits_cumules += bons
-        if k >= k_cap:
-            break
-    return rows, hits_positifs
-
 
 def top_k_deterministe(scores, vrais_liens, k, n_candidats):
     """Sans trier tous les scores. Complétion des scores nuls non matérialisée.
@@ -99,12 +44,6 @@ def top_k_deterministe(scores, vrais_liens, k, n_candidats):
     choix = nsmallest(k, scores.items(), key=lambda x: (-x[1], x[0]))
     return sum(pair in vrais_liens for pair, _ in choix)
 
-
-def ecrire_csv(path, rows, noms):
-    with path.open("w", newline="", encoding="utf-8-sig") as fh:
-        wr = csv.writer(fh)
-        wr.writerow(noms)
-        wr.writerows(rows)
 
 
 def graphes(rows_by_method, base_aleatoire, output):
@@ -182,17 +121,12 @@ def evaluer(data, output, max_k):
     plot_k = min(max_k or max(2 * k, 20000), nb_candidates)
 
     output.mkdir(parents=True, exist_ok=True)
-    print("=== Évaluation biologique CN / AA / L3 ===", flush=True)
-    print(f"Sommets : {len(nodes):,} ; train : {len(train):,} ; test : {len(test):,}", flush=True)
-    print(f"Candidats : {nb_candidates:,} ; hasard : {100 * baseline:.6f} %", flush=True)
-    print(f"Isolés dans train : {len(isolates):,} ; arêtes test impliquant un isolé : {test_inaccessibles:,}/{len(test):,}", flush=True)
-    print(f"Évaluation jusqu'à k={plot_k:,} ; seuil principal k={k:,}", flush=True)
+    title("HI-II-14 | CN / AA / L3", info=f"{len(nodes):,} protéines | {nb_candidates:,} candidats | k={k}")
 
     methods = {"CN": cn_scores, "AA": aa_scores, "L3_optimise": l3_optimise}
     summaries = []
     curves = {}
     for name, func in methods.items():
-        print(f"\nCalcul {name}...", flush=True)
         debut = time.perf_counter()
         scores = func(adj)
         duree = time.perf_counter() - debut
@@ -207,20 +141,15 @@ def evaluer(data, output, max_k):
                           f"{100 * krow[1]:.6f}", f"{100 * krow[2]:.6f}",
                           f"{krow[1] / baseline:.4f}"))
         curves[name] = rows
-        print(f"  Scores > 0 : {len(scores):,} ; temps calcul : {duree:.3f} s", flush=True)
-        print(f"  Liens de test avec score > 0 : {hits_pos:,}/{len(test):,}", flush=True)
-        print(f"  Top-{k}: {hits_exp:.2f} vrais liens (espérance), précision {100 * krow[1]:.4f} %, facteur hasard x{krow[1]/baseline:.2f}", flush=True)
-        if hits_det is not None:
-            print(f"  Top-{k} déterministe : {hits_det} vrais liens", flush=True)
-        else:
-            print("  Top-k déterministe : omis (score nul parmi les prédictions)", flush=True)
+        result(name, f"P@{k} = {100 * krow[1]:.2f} %",
+               f"{hits_exp:.1f} liens attendus", seconds=duree)
         del scores
 
-    ecrire_csv(output / "resume_l3_bio.csv", summaries,
+    save_csv(output / "resume_l3_bio.csv", summaries,
                ["methode", "nb_scores_positifs", "liens_test_score_positif", "temps_calcul_s",
                 "vrais_top_k_deterministe", "vrais_top_k_esperance", "precision_k_pourcent",
                 "rappel_k_pourcent", "facteur_vs_hasard"])
-    ecrire_csv(output / "courbes_l3_cn_aa.csv",
+    save_csv(output / "courbes_l3_cn_aa.csv",
                ((method, kk, f"{p:.12g}", f"{r:.12g}")
                 for method, rows in curves.items() for kk, p, r in rows),
                ["methode", "k", "precision_attendue", "rappel_attendu"])
@@ -237,7 +166,7 @@ def evaluer(data, output, max_k):
     }
     (output / "protocole_evaluation.json").write_text(
         json.dumps(protocole, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"\n[OK] Résultats dans : {output}", flush=True)
+    done(output)
 
 
 if __name__ == "__main__":

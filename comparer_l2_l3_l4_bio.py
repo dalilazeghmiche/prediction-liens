@@ -1,13 +1,4 @@
-"""Comparer les marches de longueur 2, 3 et 4 sur le MÊME split HI-II-14.
-
-Les scores bruts sont A^2, A^3 et A^4 (A matrice d'adjacence 0/1) :
-on compte des MARCHES, répétitions de sommets autorisées, comme dans
-la figure 3a de Kovács et al. (2019). L3 normalisé est un contrôle séparé.
-
-Usage :
-    python comparer_l2_l3_l4_bio.py --max-nodes 1000
-    python comparer_l2_l3_l4_bio.py --max-nodes all
-"""
+"""Compare les marches A²/A³/A⁴ et la méthode L3 normalisée."""
 from __future__ import annotations
 
 import argparse
@@ -16,6 +7,7 @@ import gc
 import json
 from collections import defaultdict
 from pathlib import Path
+from utils_experiences import title, result, done
 import math
 import time
 
@@ -221,8 +213,7 @@ def main():
         i, j = ids[x], ids[y]
         voisins_test[min(i, j)].add(max(i, j))
     baseline = len(test) / candidats
-    print(f'HI-II-14 : n={n:,}, train={len(train):,}, test={k:,}, candidats={candidats:,}')
-    print(f'Hasard : {100 * baseline:.6f}% ; k principal={k:,} ; courbes jusqu\'à {km:,}')
+    title("HI-II-14 | L2 / L3 / L4", info=f"n={n:,} | k={k:,} | candidats={candidats:,}")
     args.output.mkdir(parents=True, exist_ok=True)
     summaries, all_curves = [], {}
 
@@ -242,8 +233,7 @@ def main():
         summaries.append((name, len(nodes), len(train), k, positives, hits_pos,
                           f'{dt:.6f}', f'{row[1] * k:.4f}', f'{row[1] * 100:.6f}',
                           f'{row[2] * 100:.6f}', f'{row[1] / baseline:.4f}'))
-        print(f'{name:16} : scores >0 {positives:,} ; test positifs {hits_pos:,}/{k:,} ;'
-              f' précision@{k} {100*row[1]:.4f}% ; calcul matrice {dt:.3f}s ; nnz {m.nnz:,}', flush=True)
+        result(name, f"P@{k} = {100*row[1]:.2f}%", seconds=dt)
 
     # Important: L3 normalisé repose sur le même train/test mais une autre
     # pondération. Ses résultats ne doivent pas être confondus avec A^3 brut.
@@ -262,8 +252,7 @@ def main():
         summaries.append((name, len(nodes), len(train), k, pos[0], pos[1],
                           f'{dt:.6f}', f'{row[1]*k:.4f}', f'{row[1]*100:.6f}',
                           f'{row[2]*100:.6f}', f'{row[1]/baseline:.4f}'))
-        print(f'{name:16} : scores >0 {pos[0]:,} ; test positifs {pos[1]:,}/{k:,} ;'
-              f' précision@{k} {100*row[1]:.4f}% ; calcul {dt:.3f}s', flush=True)
+        result(name, f"P@{k} = {100*row[1]:.2f}%", seconds=dt)
         del scores, graph
 
     ecrire_csv(args.output / 'resume_longueurs.csv',
@@ -283,7 +272,7 @@ def main():
                  ties='Départage aléatoire uniforme en espérance y compris score nul',
                  limites='Une seule graine; présence de protéines isolées; aucune preuve biologique directe')
     (args.output / 'protocole_longueurs.json').write_text(json.dumps(proto, indent=2, ensure_ascii=False), encoding='utf-8')
-    print(f'[OK] Résultats dans : {args.output}')
+    done(args.output)
 
 
 if __name__ == '__main__':

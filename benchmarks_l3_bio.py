@@ -1,15 +1,4 @@
-"""Benchmark L3 naïf versus optimisé sur sous-graphes induits HI-II-14.
-
-Exemple rapide :
-  python benchmarks_l3_bio.py --sizes 120,240 --naive-max 240 --repeats 1
-
-Campagne principale :
-  python benchmarks_l3_bio.py --sizes 500,1000,2000,all --naive-max 2000 --repeats 3
-
-Le code de src/measures/l3.py n'est jamais modifié. Seul le temps de calcul des
-scores est chronométré, sans trier les scores. Les données sont construites et
-les bibliothèques importées avant le chronométrage.
-"""
+"""Benchmark de L3 naïf / optimisé sur des sous-graphes induits."""
 from __future__ import annotations
 
 import argparse
@@ -19,6 +8,7 @@ import json
 import math
 import os
 from pathlib import Path
+from utils_experiences import title, result, done
 import pickle
 import random
 import statistics
@@ -215,12 +205,9 @@ def main(args):
     sizes = sizes_from_cli(args.sizes, len(nodes))
     out = args.out
     out.mkdir(parents=True, exist_ok=True)
-    print(f"Réseau de base : {len(nodes)} sommets, {sum(map(len, graph.values())) // 2} arêtes")
-    print(f"Sous-graphes induits emboîtés : {sizes} ; seed={args.seed}")
-    print(f"Répétitions : {args.repeats} ; naïf jusqu'à n={args.naive_max}")
-    print("Vérification indépendante sur 80 petits graphes aléatoires...")
+    title("HI-II-14 | Benchmarks L3", info=f"n={sizes} | repeats={args.repeats}")
     check_random_small_graphs()
-    print("  [OK] L3 naïf = L3 optimisé (tolérance flottante)")
+
 
     summary = []
     individual = []
@@ -230,15 +217,12 @@ def main(args):
         for n in sizes:
             subset = nested_induced_subgraph(graph, nodes[:n])
             edges = sum(map(len, subset.values())) // 2
-            print(f"\nn={n}, m={edges} :")
             if n <= args.naive_max:
                 ref = l3_naif(subset)
                 fast = l3_optimise(subset)
                 same_scores(ref, fast)
-                print(f"  [OK] Scores égaux ({len(ref)} paires positives)")
+
                 del ref, fast
-            else:
-                print("  Contrôle naïf ignoré à cette taille (limite de coût)")
             with payload.open("wb") as fh:
                 pickle.dump(subset, fh, protocol=pickle.HIGHEST_PROTOCOL)
             per_size = {}
@@ -263,15 +247,14 @@ def main(args):
                 for i, value in enumerate(timings, 1):
                     individual.append({"n": n, "m": edges, "methode": method,
                                        "repetition": i, "temps_s": value})
-                print(f"  {method}: {record['median_s']:.5f} s ; "
-                      f"{record['scores_positifs']} scores ; "
-                      f"RSS+ ~{record['rss_extra_mib']:.1f} Mio")
             if len(per_size) == 2:
                 a = per_size["L3_naif"]["median_s"]
                 b = per_size["L3_optimise"]["median_s"]
                 speedup = a / b if b else float("inf")
                 gains.append({"n": n, "m": edges, "acceleration_naif_sur_optimise": speedup})
-                print(f"  Gain observé = x{speedup:.2f}")
+                result(f"n={n}", f"naïf={a:.4f}s | opt={b:.4f}s | ×{speedup:.1f}")
+            else:
+                result(f"n={n}", f"opt={per_size['L3_optimise']['median_s']:.4f}s | référence naïve ignorée")
 
     write_csv(out / "mesures_l3.csv", ["n", "m", "methode", "repetition", "temps_s"], individual)
     write_csv(out / "resume_benchmarks_l3.csv", ["n", "m", "methode", "scores_positifs", "median_s",
@@ -288,11 +271,7 @@ def main(args):
     }
     (out / "protocole_l3.json").write_text(json.dumps(protocol, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     make_plots(summary, out)
-    print(f"\n[OK] Benchmarks terminés : {out}")
-    print(" - resume_benchmarks_l3.csv")
-    print(" - acceleration_l3.csv")
-    print(" - l3_temps_log.png")
-    print(" - l3_memoire_rss.png")
+    done(out)
 
 
 if __name__ == "__main__":

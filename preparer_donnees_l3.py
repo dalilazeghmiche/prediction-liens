@@ -1,10 +1,4 @@
-"""Prépare un découpage reproductible du réseau biologique HI-II-14.
-
-À lancer depuis la racine du dépôt prediction-liens :
-    python preparer_donnees_l3.py --data data/raw/HI-II-14.tsv --fraction 0.5 --seed 42
-
-Ne calcule aucun score L3 : ce script prépare seulement les données.
-"""
+"""Prépare un masquage reproductible des interactions HI-II-14."""
 
 import argparse
 import hashlib
@@ -13,6 +7,7 @@ import re
 from pathlib import Path
 
 from src.graph_io import from_edges, num_edges
+from utils_experiences import title, done
 from src.split import random_edge_split
 
 _ENSG = re.compile(r"^ENSG\d+(?:\.\d+)?$", re.IGNORECASE)
@@ -140,16 +135,11 @@ def preparer(chemin, sortie, fraction, seed):
     (sortie / 'protocole.json').write_text(
         json.dumps(rapport, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
 
-    print('=== Préparation du réseau biologique HI-II-14 ===')
-    print(f"Articles/ligne d'interactions : {infos['lignes_donnees']:,}")
-    print(f"Sommets : {len(adj):,} | arêtes uniques : {len(originales):,}")
-    print(f"Boucles ignorées : {infos['boucles_ignorees']:,} | doublons ignorés : {infos['doublons_ignores']:,}")
-    print(f'Apprentissage : {len(train):,} arêtes | Test : {len(test):,} arêtes')
-    print(f'Sommets isolés en apprentissage : {rapport["sommets_isoles_dans_train"]:,}')
-    print(f'Paires candidates : {split.num_candidates:,}')
-    print(f'Précision du hasard (attendue) : {100 * rapport["precision_hasard"]:.6f} %')
-    print('Vérifications : aucun chevauchement train/test, ensemble original reconstitué : OK')
-    print(f'Fichiers : {sortie}')
+    title("HI-II-14 | Préparation", info=f"seed={seed} | fraction={fraction:g}")
+    print(f"  {len(adj):,} protéines | {len(train):,} arêtes train | {len(test):,} test")
+    print(f"  {split.num_candidates:,} candidats | hasard {rapport['precision_hasard']:.4%}")
+    print("  [OK] Train/test disjoints ; sommets isolés conservés")
+    done(sortie)
     return rapport
 
 

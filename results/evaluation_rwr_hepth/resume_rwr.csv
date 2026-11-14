@@ -1,2 +1,2 @@
 algorithme,alpha,tol,max_iter,block_size,auteurs_coeur,paires_candidates,nouvelles_relations,paires_scores_positifs,bonnes_predictions,precision_at_k,rappel_at_k,hasard,facteur_vs_hasard,ex_aequo_au_seuil,places_dans_ex_aequo,bonnes_predictions_esperees_ex_aequo_aleatoires,temps_calcul_et_tri_secondes
-RWR_symetrise,0.15,1e-10,1000,64,1022,520093,1164,362697,87,0.07474226804123711,0.07474226804123711,0.0022380612698113607,33.395988326779324,1,1,87.0,6.6505143999820575
+RWR_symetrise,0.15,1e-10,1000,64,1022,520093,1164,362697,87,0.07474226804123711,0.07474226804123711,0.0022380612698113607,33.395988326779324,2,2,87.0,17.599177899988717
